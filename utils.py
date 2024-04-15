@@ -19,7 +19,7 @@ np.random.seed(42)
 def EbNo_to_noise(ebnodb, rate):
     '''Transform EbNo[dB]/snr to noise power'''
     ebno = 10**(ebnodb/10)
-    noise_std = 1/np.sqrt(rate*ebno) #without factor two, as in the original paper
+    noise_std = 1/np.sqrt(2*rate*ebno)
     return noise_std
 
 def SNR_to_noise(snrdb):

@@ -70,7 +70,7 @@ class Trainer:
 
             for i in (pbar := tqdm(range(500))):  # Train decoder 500 times
                 decoder_optimizer.zero_grad()
-                    
+                     
                 m = torch.randint(0,2, size=(batch_size, input_dim))
                 m = m.float().to(self.device)  
                 x = encoder(m)
@@ -86,7 +86,15 @@ class Trainer:
                 x_out = channel(x, noise_std_matrix_torch)
                 output = decoder(x_out)
                 
-                loss = F.binary_cross_entropy(output, m)
+                #loss = F.binary_cross_entropy(output, m)
+                L_BCE = F.binary_cross_entropy(output, m)
+               
+                L_sparse = torch.norm(x, 1)
+                lambda_sparse = 0.01  # Hyperparameter for sparsity
+                # Combined loss
+                loss = L_BCE + lambda_sparse * L_sparse
+
+                
                 loss = loss.mean()
                 loss.backward()
                 losses.append(loss.item())
